@@ -1,10 +1,30 @@
 version: '3.9'
 
 services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+      POSTGRES_DB: db
+      TZ: Asia/Seoul
+    env_file:
+      - .env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+  redis:
+    image: redis
+    command: redis-server --port 6379
+    hostname: redis_test
+    environment:
+      TZ: Asia/Seoul
   app:
     build: .
+    depends_on: 
+      - postgres
+      - redis
     ports:
       - '3000:3000'
     volumes:
       - '.:/src/app'
-      - '/src/app/node_modules'
+      - '/c/Users/BJS/Desktop/projects/js-s-nestjs/node_modules'
